@@ -1,5 +1,3 @@
-### git checkout dev
-
 ```bash
-yarn
+yarn && yarn start
 ```
