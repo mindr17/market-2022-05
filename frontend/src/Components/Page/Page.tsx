@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import ReactDOM from "react-dom";
 import Header from './Header/Header';
+import Main from './Main/Main';
+// import Footer from './Footer/Footer';
  
-export default function PageTitle() {
+export default function Page() {
   return (
     <div className="page">
       <Header />
-      {/* <Main /> */}
+      <Main />
       {/* <Footer /> */}
     </div>
   );
 }
 
 ReactDOM.render(
-  <PageTitle />,
-  document.getElementById("app")
+  <Page />,
+  document.body
 );

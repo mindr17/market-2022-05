@@ -1,0 +1,20 @@
+@import './../../../assets/global-styles/variables.scss';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  height: 100px;
+  width: 100%;
+  background-color: black;
+  color: #fff;
+}
+.logo {
+  font-size: 32px;
+}
+.chat-button {
+  height: 60px;
+  width: 200px;
+  cursor: pointer;
+}
