@@ -1,6 +1,25 @@
 .main__chat {
   display: flex;
+  flex-direction: column;
   height: 500px;
   width: 100%;
   background-color: #b5e48c;
+  justify-content: space-between;
+  font-size: 24px;
+  padding: 10px;
+}
+.chat__messages {
+
+}
+.chat__input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.input-chat__text {
+  width: 100%;
+}
+.input-chat__submit {
+  height: 40px;
+  width: 200px;
 }

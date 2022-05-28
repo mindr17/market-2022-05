@@ -19,9 +19,9 @@ export default function Header() {
           li.
         </ul>
       </nav> */}
-      <button className="chat-button" onClick={ toggleChat }>
+      {/* <button className="chat-button" onClick={ toggleChat }>
         Open chat
-      </button>
+      </button> */}
     </header>
   );
 }

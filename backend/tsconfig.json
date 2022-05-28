@@ -3,7 +3,7 @@
     "jsx": "react",
     "module": "commonjs",
     "target": "esnext",
-    "sourceMap": true,
+    "sourceMap": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
