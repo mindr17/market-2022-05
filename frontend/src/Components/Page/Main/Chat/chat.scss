@@ -9,17 +9,6 @@
   padding: 10px;
 }
 .chat__messages {
-
-}
-.chat__input {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.input-chat__text {
-  width: 100%;
-}
-.input-chat__submit {
-  height: 40px;
-  width: 200px;
+  overflow-y: scroll;
+  height: 100%;
 }

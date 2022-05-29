@@ -10,16 +10,20 @@ export default function ChatForm(props) {
   }
 
   return (
-    <form onSubmit={(e) => {
-      e.preventDefault();
-      handleChange(inputValue)
-    }}>
+    <form 
+      className="chat__form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleChange(inputValue)
+      }}
+    >
       <input
+        className="chat__input"
         onChange={(e) => {setInputValue(e.target.value)}}
         value={inputValue}
       />
-      <button>
-        Добавить
+      <button className="chat__submit">
+        Send
       </button>
     </form>
   );

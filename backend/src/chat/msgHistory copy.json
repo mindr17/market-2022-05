@@ -1,0 +1,19 @@
+[
+  {
+    "message": "Hello Typescript!",
+    "time": "value",
+    "author": "typescriptLover"
+  },
+  {
+    "message": "value",
+    "time": "value"
+  },
+  {
+    "message": "value",
+    "time": "value"
+  },
+  {
+    "message": "value",
+    "time": "value"
+  }
+]

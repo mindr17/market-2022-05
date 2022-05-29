@@ -1,39 +1,39 @@
-export class MySocket {
-  private _socket;
-  // private _onMessage;
+import {socketInterface} from './interfaces';
+
+export class MySocket implements socketInterface {
+  private _socket: WebSocket;
 
   constructor() {
     const URL = 'ws://localhost:3000/';
-
     this._socket = new WebSocket(URL, 'echo-protocol');
   
-    this._socket.onopen = function() {
-      console.log("Соединение установлено.");
+    this._socket.onopen = (): void => {
+      console.log('Connection open!');
     };
     
-    this._socket.onclose = function(event) {
+    this._socket.onclose = (event): void => {
       if (event.wasClean) {
-        console.log('Соединение закрыто чисто');
+        console.log('Connection closed!');
       } else {
-        console.log('Обрыв соединения');
+        console.log('Connection failed!');
       }
-      console.log('Код: ' + event.code + ' причина: ' + event.reason);
+      console.log(`event.code is ${event.code} because of ${event.reason}`);
     };
     
-    this._socket.onerror = function(error: any) {
-      console.log("Ошибка " + error.message);
+    this._socket.onerror = (error: any): void => {
+      console.log(`error: ${error.message}`);
     };
   }
   
-  public onMessage(callback) {
+  public onMessage(callback): void {
     this._socket.onmessage = callback;
   }
 
-  public sendMessage(socketMsgJson: string) {
+  public sendMessage(socketMsgJson: string): void {
     this._socket.send(socketMsgJson);
   }
 
-  destroy() {
-    this._socket.disconnect();
+  destroy(): void {
+    this._socket.close();
   }
 }

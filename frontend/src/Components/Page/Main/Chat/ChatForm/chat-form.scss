@@ -1,0 +1,18 @@
+.chat__form {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.chat__input {
+  flex: 4 0 auto;
+  display: flex;
+  align-items: center;
+}
+.input-chat__text {
+  width: 100%;
+}
+.chat__submit {
+  flex: 1 0 200px;
+  height: 40px;
+  // width: 200px;
+}
