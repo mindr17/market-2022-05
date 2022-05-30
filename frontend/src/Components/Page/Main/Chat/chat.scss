@@ -12,3 +12,17 @@
   overflow-y: scroll;
   height: 100%;
 }
+.chat__messages-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.message__date {
+  font-size: 12px;
+}
+.message__author {
+  font-weight: 700;
+}
+.message__content {
+
+}

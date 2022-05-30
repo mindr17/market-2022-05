@@ -39,34 +39,54 @@ wsServer.on('request', async (request) => {
     return;
   }
   let connection = request.accept('echo-protocol', request.origin);
-  clients.push({
-    connection: connection,
-    id: 1,
-  });
-  console.log((new Date()) + ' Connection accepted.');
-  const msgHistoryObj: any = await getMsgsHistory();
+  
+  const greetNewClient = async () => {
+    clients.push({
+      connection: connection,
+      id: 1,
+    });
+    console.log((new Date()) + ' Connection accepted.');
+    const fileStr: any = await getMsgsHistory();
+    let fileTemplateArr = [
+      {
+        message: 'initial template msg',
+        date: new Date(),
+        author: 'Author',
+      }
+    ];
+    let fileObj = {};
+    try {
+      fileObj = JSON.parse(fileStr);
+    } catch(err) {
+      fileObj = fileTemplateArr;
+      console.log('History cleared due to error!');
+    }
+    const initialResponse = {
+      file: fileObj,
+      history: true
+    };
+    const initialResponseJson = JSON.stringify(initialResponse);
+    connection.send(initialResponseJson);
+  };
+  await greetNewClient();
 
   connection.on('message', async (message: { type: string; utf8Data: string; }) => {
     if (message.type === 'utf8') {
       const fromClientMsgStr = message.utf8Data;
+      const fromClientMsgData = JSON.parse(fromClientMsgStr);
       const fromClientMsgObj = {
-        message: fromClientMsgStr,
+        message: fromClientMsgData.msg,
         date: new Date(),
-        author: 'Author',
+        author: fromClientMsgData.nickName,
+        history: false,
       }
-      await addMsgToHistory(msgHistoryObj.writeStream, fromClientMsgObj);
-      console.log('Received Message: ' + message.utf8Data);
-      // connection.sendUTF(message.utf8Data);
-      const dataToSend = fromClientMsgStr;
-      clients.forEach(function(client) {
+      const fromClientMsgJson = JSON.stringify(fromClientMsgObj);
+      await addMsgToHistory(fromClientMsgObj);
+      const dataToSend = fromClientMsgJson;
+      clients.forEach((client) => {
         client.connection.send(dataToSend);
-        // connection.sendUTF(message.utf8Data);
       });
     }
-    // else if (message.type === 'binary') {
-    //     console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
-    //     connection.sendBytes(message.binaryData);
-    // }
   });
   connection.on('close', function(reasonCode, description) {
       console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');

@@ -7,15 +7,21 @@ import { socketInterface } from '../../../../scripts/interfaces';
 
 export default function Chat(): string {  
   const [messages, setMessages] = useState([]);
-  let refContainer = useRef(null);
+  let socketRef = useRef(null);
   let messagesContainerRef = useRef(null);
   
   useEffect(() => {
     const chatSocket: socketInterface = new MySocket();
-    refContainer.current = chatSocket;
+    socketRef.current = chatSocket;
     chatSocket.onMessage((event: { data: string; }) => {
+      const newStr = event.data;
+      const newObj = JSON.parse(newStr);
       setMessages((messagesArg: string) => {
-        return [...messagesArg, event.data];
+        return (
+            newObj.history
+              ? newObj.file
+              : [...messagesArg, newObj]
+          )
       });
     });
     
@@ -28,25 +34,27 @@ export default function Chat(): string {
 
   useEffect(() => {
     const messagesContainerNode = messagesContainerRef.current;
-    // console.log('messagesContainerRef: ', messagesContainerRef);
     if (messagesContainerNode) {
       messagesContainerNode.scroll({
         top: messagesContainerNode.scrollHeight,
-        // bottom: 0,
         left: 0,
-        behavior: "smooth"
       });
     }
   });
 
 
-  const sendMessage = (msg: string): void => {
+  const sendMessage = (nickName, msg): void => {
+    console.log('msg: ', msg);
     try {
-      // console.log('msg: ', msg);
-      // const sendMessageJson = JSON.parse(msgObj);
-      const sendMessageJson = msg;
-      // console.log('refContainer.current: ', refContainer.current);
-      refContainer.current.sendMessage(sendMessageJson);
+      const sendMessageObj = {
+        msg: msg,
+        nickName: nickName,
+      };
+      const sendMessageJson = JSON.stringify(sendMessageObj);
+      console.log('sendMessageJson: ', sendMessageJson);
+      const testObj = JSON.parse(sendMessageJson);
+      console.log('testObj: ', testObj);
+      socketRef.current.sendMessage(sendMessageJson);
     } catch (err) {
       console.error(err);
     }
@@ -58,14 +66,22 @@ export default function Chat(): string {
         ref={messagesContainerRef}
       >
         {
-          messages.map((msg: string, index: number): string => {
+          messages.map((msg, index: number): string => {
+            msg.date = msg.date;
             return (
-              <div key={index}>{msg}</div>
+              <div key={index}>
+                <div className="chat__messages-item message">
+                  <div className="message__date">{msg.date}</div>
+                  <div className="message__author">{msg.author}</div>
+                  <div className="message__content">{msg.message}</div>
+                </div>
+              </div>
             );
+            return '';
           })
         }
       </div>
-      <ChatForm handleChange={sendMessage} />
+      <ChatForm handleSubmit={sendMessage} />
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path, { resolve } from 'path';
-import { pathToFileURL } from 'url';
 
 const MSGS_FILE_NAME: string = 'msgHistory.json';
 const msgsFilePath: string = path.join(__dirname, MSGS_FILE_NAME);
@@ -18,49 +17,38 @@ const checkFileExists = async (filePath: string): Promise<boolean> => {
 export const getMsgsHistory = async () => {
   try {
     const msgsFileExists: boolean = await checkFileExists(msgsFilePath);
-    console.log('msgsFileExists: ', msgsFileExists);
     if (!msgsFileExists) {
       return (
         new Promise(() => {
           resolve('');
         })
-        )
+      )
     }
     const fileStr: string = await fsPromises.readFile(msgsFilePath, "utf8");
-    const writeStream = fs.createWriteStream(msgsFilePath, { encoding: "utf8" });
-    // console.log('fileJson: ', fileJson);
-    // const result: Promise<string> = new Promise(() => {[]});
     const msgHistoryObj = {
       fileStr,
-      writeStream,
     }
-    return msgHistoryObj
+    return fileStr
   } catch {
     console.error('Can\'t access file with messages!');
   }
-  // return new Promise(() => {
-  //   resolve('');
-  // });
-
 }
 
-export const addMsgToHistory = async (oldWriteStream, msg: object) => {
-  console.log('msg: ', msg);
-
+export const addMsgToHistory = async (msg: object) => {
   const fileStr: string = await fsPromises.readFile(msgsFilePath, "utf8");
-  // const oldMsgsArr = JSON.parse(fileJson);
-  // console.log('oldMsgsArr: ', oldMsgsArr);
-  // oldMsgsArr.push
-  // const newArr = [...fileJson, msg]
-  // const newJson = JSON.stringify(newArr);
-  const newArr = fileStr + msg;
-  const newStr = newArr.toString();
+  let fileTemplateArr = [
+    {
+      message: 'initial template msg',
+      date: new Date(),
+      author: 'Author',
+    }
+  ];
+  if (fileStr.length > 0) {
+    fileTemplateArr = JSON.parse(fileStr);
+  }
+  const newArr: any = fileTemplateArr;
+  newArr.push(msg);
+  const fileJSON = JSON.stringify(newArr);
   const newWriteStream = fs.createWriteStream(msgsFilePath, { encoding: "utf8" });
-  newWriteStream.write(newStr);
-
-  // const fileWithMsg = 
-  // if () {
-
-  // }
-
+  newWriteStream.write(fileJSON);
 };

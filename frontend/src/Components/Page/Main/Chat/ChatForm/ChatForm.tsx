@@ -2,29 +2,35 @@ import React, { useState } from 'react';
 import './chat-form.scss';
 
 export default function ChatForm(props) {
-  const { handleChange } = props;
-  const [inputValue, setInputValue] = useState('Input your msg');
-
-  const onInputChange = () => {
-
-  }
+  const { handleSubmit } = props;
+  const [nickName, setNickName] = useState('Name');
+  const [inputValue, setInputValue] = useState('Message');
 
   return (
     <form 
       className="chat__form"
       onSubmit={(e) => {
         e.preventDefault();
-        handleChange(inputValue)
+        handleSubmit(nickName, inputValue);
       }}
     >
-      <input
-        className="chat__input"
-        onChange={(e) => {setInputValue(e.target.value)}}
-        value={inputValue}
-      />
-      <button className="chat__submit">
-        Send
-      </button>
+      <div className="chat__texts">
+        <input
+          size="1"
+          className="chat__input-name"
+          onChange={(e) => {setNickName(e.target.value)}}
+          value={nickName}
+          />
+        <input
+          size="1"
+          className="chat__input-message"
+          onChange={(e) => {setInputValue(e.target.value)}}
+          value={inputValue}
+        />
+        <button className="chat__submit">
+          Send
+        </button>
+      </div>
     </form>
   );
 };
