@@ -5,12 +5,14 @@ export class MySocket implements socketInterface {
 
   constructor() {
     const URL = 'ws://localhost:3000/';
+    // const URL = 'ws://market22.cloudno.de/';
+    
     this._socket = new WebSocket(URL, 'echo-protocol');
-  
+
     this._socket.onopen = (): void => {
       console.log('Connection open!');
     };
-    
+
     this._socket.onclose = (event): void => {
       if (event.wasClean) {
         console.log('Connection closed!');
@@ -19,12 +21,12 @@ export class MySocket implements socketInterface {
       }
       console.log(`event.code is ${event.code} because of ${event.reason}`);
     };
-    
+
     this._socket.onerror = (error: any): void => {
       console.log(`error: ${error.message}`);
     };
   }
-  
+
   public onMessage(callback): void {
     this._socket.onmessage = callback;
   }
@@ -32,6 +34,10 @@ export class MySocket implements socketInterface {
   public sendMessage(socketMsgJson: string): void {
     this._socket.send(socketMsgJson);
   }
+
+  // public sendMessage(socketMsgJson: string): void {
+  //   this._socket.send(socketMsgJson);
+  // }
 
   destroy(): void {
     this._socket.close();

@@ -46,9 +46,11 @@ export default function Chat(): string {
   const sendMessage = (nickName, msg): void => {
     console.log('msg: ', msg);
     try {
+      const sendingDate = new Date();
       const sendMessageObj = {
         msg: msg,
         nickName: nickName,
+        date: sendingDate,
       };
       const sendMessageJson = JSON.stringify(sendMessageObj);
       console.log('sendMessageJson: ', sendMessageJson);
