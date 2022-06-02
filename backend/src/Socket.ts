@@ -1,13 +1,15 @@
-import { IServer } from "./types";
+import { IMsgObj, ISocket } from "./types";
 import { addMsgToHistory, getMsgsHistory } from './chat/chatHistory';
+import { MsgObj } from "./MsgObj";
 
 const WebSocketServer = require('websocket').server;
 
-export class Socket {
+export class Socket implements ISocket {
   private _wsServer;
+  private _clients: any[];
 
   constructor(server) {
-    let clients = [];
+    this._clients = [];
 
     const wsServer = new WebSocketServer({
       httpServer: server,
@@ -28,32 +30,29 @@ export class Socket {
       const connection = request.accept('echo-protocol', request.origin);
       
       const greetNewClient = async () => {
-        clients.push({
+        this._clients.push({
           connection: connection,
           id: 1,
         });
         console.log((new Date()) + ' Connection accepted.');
         const fileStr: any = await getMsgsHistory();
-        const fileTemplateArr = [
-          {
-            message: 'initial template msg',
-            date: new Date(),
-            author: 'Author',
-          }
-        ];
-        let fileObj = {};
-        try {
-          fileObj = JSON.parse(fileStr);
-        } catch(err) {
-          fileObj = fileTemplateArr;
-          console.log('History cleared due to error!');
-        }
-        const initialResponse = {
-          file: fileObj,
-          history: true
-        };
-        const initialResponseJson = JSON.stringify(initialResponse);
-        connection.send(initialResponseJson);
+        const fileTeplateObj = new MsgObj(fileStr);
+        // const fileTemplateArr: IMsgObj[] = [
+        //   fileTeplateObj
+        // ];
+        // // const fileObj =
+        // try {
+        //   fileObj = JSON.parse(fileStr);
+        // } catch(err) {
+        //   fileObj = fileTemplateArr;
+        //   console.log('History cleared due to error!');
+        // }
+        // const initialResponse = {
+        //   file: fileObj,
+        //   history: true,
+        // };
+        // const initialResponseJson = JSON.stringify(initialResponse);
+        // connection.send(initialResponseJson);
       };
       await greetNewClient();
 
@@ -70,7 +69,7 @@ export class Socket {
           const fromClientMsgJson = JSON.stringify(fromClientMsgObj);
           await addMsgToHistory(fromClientMsgObj);
           const dataToSend = fromClientMsgJson;
-          clients.forEach((client) => {
+          this._clients.forEach((client) => {
             client.connection.send(dataToSend);
           });
         }

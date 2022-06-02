@@ -1,13 +1,12 @@
-import { IServer } from './types';
+import { IDbConnection, IServer, ISocket } from './types';
 // import { addMsgToHistory, getMsgsHistory } from './chat/chatHistory';
 import { Server } from './Server';
 import { Socket } from './Socket';
-import { DbConnection } from './DbConnection';
+import { dbConnection } from './DbConnection';
 
-const dbConnection = new DbConnection();
-const db = dbConnection.db;
-
-const serverObj: IServer = new Server();
-const server = serverObj.server;
-
-const socket = new Socket(server);
+dbConnection.init().then((): void => {
+  const serverObj: IServer = new Server();
+  const server = serverObj.server;
+  console.log(123);
+  const socket: ISocket = new Socket(server);
+})

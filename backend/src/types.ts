@@ -9,5 +9,11 @@ export interface ISocket {
 }
 
 export interface IDbConnection {
+  db: any;
+}
 
+export interface IMsgObj {
+  message: string,
+  date: Date,
+  author: string,
 }

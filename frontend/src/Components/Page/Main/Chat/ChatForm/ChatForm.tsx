@@ -20,7 +20,7 @@ export default function ChatForm(props) {
           className="chat__input-name"
           onChange={(e) => {setNickName(e.target.value)}}
           value={nickName}
-          />
+        />
         <input
           size="1"
           className="chat__input-message"

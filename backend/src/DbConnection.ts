@@ -1,32 +1,38 @@
-import { MongoClient } from 'mongodb';
+import { IDbConnection } from './types';
+import { Db, MongoClient } from 'mongodb';
 
 // const connection_url: string = 'mongodb://pocmbpdzfb:WbUoHEBV1i@mongodb.cloudno.de:27017/market22';
 const connection_url: string = 'mongodb://localhost:27017/market22';
 const dbName: string = 'market22';
 
-const client: MongoClient = new MongoClient(connection_url);
-
-export class DbConnection {
+class DbConnection implements IDbConnection {
+  private _client: MongoClient;
+  private _db: Db;
+  
   constructor() {
+    this._client = new MongoClient(connection_url);
+    this._db = null;
   }
 
-  private async connect() {
+  public async init(): Promise<void> {
     try {
-      await client.connect();
+      await this._client.connect();
       console.log('Connected to database!');
-      const db = client.db(dbName);
+      this._db = this._client.db(dbName);
       // const collection = db.collection('documents');
       // await collection.insertOne({some: 'sample data'});
-      return db;
     } catch(err) {
       throw new Error(err);
     } finally {
       console.log('connected!');
-      () => client.close();
+      this._client.close();
     }
   }
-  
+
   public get db() {
-    return this.connect();
+    if (this._db == null) throw new Error('Connection failed!');
+    return this._db;
   }
 }
+
+export const dbConnection = new DbConnection();

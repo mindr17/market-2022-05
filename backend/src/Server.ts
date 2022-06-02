@@ -1,5 +1,5 @@
 import http from 'http';
-import IServer from './types';
+import { IServer } from './types';
 
 export class Server implements IServer {
   static _instance: IServer;
