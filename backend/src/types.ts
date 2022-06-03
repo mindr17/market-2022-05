@@ -1,10 +1,12 @@
+import EventEmitter from 'events';
 import http from 'http';
 
 export interface IServer {
-  server: http.Server;
+  // instance: http.Server;
 }
 
-export interface ISocket {
+export interface ISocket extends EventEmitter{
+  // on(arg0: string, arg1: () => void);
 
 }
 
@@ -14,6 +16,6 @@ export interface IDbConnection {
 
 export interface IMsgObj {
   message: string,
-  date: Date,
+  date: Date | number,
   author: string,
 }

@@ -1,11 +1,11 @@
 import { IMsgObj } from "./types";
 
-export class MsgObj implements IMsgObj {
+export default class MsgObj implements IMsgObj {
   author: string;
   message: string;
   date: Date;
 
-  constructor(fileStr: any) {
+  constructor(fileStr: IMsgObj) {
     if (typeof fileStr.message !== 'string') {
       throw new Error('Wrong type of message');
     }
@@ -18,18 +18,17 @@ export class MsgObj implements IMsgObj {
     this.date = date;
   }
 
-  // static fromString(str) {
-  static fromString(str) {
+  static fromString(str: string) {
     try {
       return new MsgObj(JSON.parse(str));
     } catch(err) {
       return new MsgObj(
-          {
-            message: 'initial template msg',
-            date: Date.now(),
-            author: 'Author',
-          }      
-        );
+        {
+          message: 'initial template msg',
+          date: Date.now(),
+          author: 'Author',
+        }
+      );
     }
   }
 }

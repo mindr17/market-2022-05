@@ -1,7 +1,8 @@
 import http from 'http';
 import { IServer } from '../types';
+import { config } from '../config';
 
-export class Server implements IServer {
+class Server implements IServer {
   static _instance: IServer;
   private _server: http.Server;
   
@@ -16,12 +17,14 @@ export class Server implements IServer {
       response.writeHead(404);
       response.end();
     });
-    this._server.listen(3000, () => {
+    this._server.listen(config.port, () => {
       console.log((new Date()) + ' Server is listening on port 3000');
     });
   }
 
-  public get server() {
+  public get instance(): http.Server {
     return this._server;
   }
 }
+
+export const httpServer = new Server();

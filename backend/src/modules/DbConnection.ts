@@ -1,14 +1,13 @@
 import { IDbConnection } from '../types';
 import { Db, MongoClient } from 'mongodb';
+import { config } from './../config';
 
 class DbConnection implements IDbConnection {
   private _client: MongoClient;
   private _db: Db;
   
-  constructor() {
-    // const connection_url: string = 'mongodb://pocmbpdzfb:WbUoHEBV1i@mongodb.cloudno.de:27017/market22';
-    const connection_url: string = 'mongodb://localhost:27017/market22';
-    this._client = new MongoClient(connection_url);
+  constructor(client) {
+    this._client = client;
     this._db = null;
   }
   
@@ -20,18 +19,19 @@ class DbConnection implements IDbConnection {
       this._db = this._client.db(dbName);
       // const collection = db.collection('documents');
       // await collection.insertOne({some: 'sample data'});
-    } catch(err) {
+    } catch (err) {
       throw new Error(err);
     } finally {
       console.log('connected!');
       // this._client.close();
     }
   }
-
-  public get db() {
+  
+  public get db(): Db {
     if (this._db == null) throw new Error('Connection failed!');
     return this._db;
   }
 }
 
-export const dbConnection = new DbConnection();
+const connection_url: string = config.dbUrl;
+export const dbConnection = new DbConnection(new MongoClient(connection_url));

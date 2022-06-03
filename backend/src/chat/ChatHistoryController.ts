@@ -7,20 +7,20 @@ export class ChatHistoryController {
   // private _chatHistory: IMsgObj[];
 
   constructor() {
-    const db: Db = dbConnection.db;
+    const { db } = dbConnection;
     this._collection = db.collection('chatMessages');
   }
 
   // public async getHistory(): Promise<IMsgObj[]> {
-  public async getHistory(): Promise<any> {
+  public async getHistory(): Promise<WithId<Document>[]> {
     try {
       // const somMsgObj = new MsgObj(fileStr);
-      const query: object = {};
+      const query = {};
       // const cursor: FindCursor<WithId<Document>> = collection.find(query);
-      const cursor = this._collection.find(query);
-      const dbResponse = await cursor.toArray();
+      const cursor: FindCursor<WithId<Document>> | undefined
+        = this._collection.find(query);
 
-      return dbResponse;
+      return await cursor.toArray();
     } catch(err) {
       console.error(`Chat messages collection is broken! ${err}`);
     }
@@ -29,7 +29,6 @@ export class ChatHistoryController {
   public async saveMessage(msg: OptionalId<Document>) {
     try {
       await this._collection.insertOne(msg);
-
     } catch(err) {
 
     }

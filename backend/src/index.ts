@@ -1,12 +1,16 @@
-import { IDbConnection, IServer, ISocket } from './types';
-// import { addMsgToHistory, getMsgsHistory } from './chat/chatHistory';
-import { Server } from './modules/Server';
+import http from 'http';
+import { ISocket } from './types';
+import { httpServer } from './modules/Server';
 import { Socket } from './modules/Socket';
 import { dbConnection } from './modules/DbConnection';
 
 dbConnection.init().then((): void => {
-  const serverObj: IServer = new Server();
-  const server = serverObj.server;
-  console.log('index.ts 1');
-  const socket: ISocket = new Socket(server);
-})
+  const myHttpServer: http.Server = httpServer.instance;
+  const socket: ISocket = new Socket(myHttpServer);
+
+  const handleMsg = (argument): void => {
+    console.log(`${argument} emitted!`);
+  };  
+  socket.on('msgEvent', handleMsg);
+  socket.on('msgEvent', handleMsg);
+});
