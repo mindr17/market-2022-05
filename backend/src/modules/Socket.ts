@@ -1,16 +1,17 @@
 import { IMsgObj, ISocket } from "../types";
 // import { addMsgToHistory, getMsgsHistory } from './chat/chatHistory';
-import { ChatHistory } from '../chat/chatHistory';
+import { ChatHistoryController } from '../chat/ChatHistoryController';
 import { MsgObj } from '../MsgObj';
 
 const WebSocketServer = require('websocket').server;
 
 export class Socket implements ISocket {
-  private _wsServer;
   private _clients: any[];
+  private _chatHistoryController: ChatHistoryController;
 
   constructor(server) {
     this._clients = [];
+    this._chatHistoryController = new ChatHistoryController();
 
     const wsServer = new WebSocketServer({
       httpServer: server,
@@ -20,7 +21,7 @@ export class Socket implements ISocket {
     const originIsAllowed = (origin) =>{
       return true;
     }
-    
+
     wsServer.on('request', async (request: { origin: string; reject: () => void; accept: (arg0: string, arg1: any) => any; }) => {
       console.log((new Date()) + ' Connection accepted.');
       if (!originIsAllowed(request.origin)) {
@@ -35,35 +36,16 @@ export class Socket implements ISocket {
           connection: connection,
           id: 1,
         });
-        console.log('Greeting new client!');
+        console.log(`Greeting new client from ${request.origin}!`);
         
-        const chatHistory = new ChatHistory();
-        const chatHistoryArr = await chatHistory.getHistory();
-        console.log('chatHistoryArr: ', chatHistoryArr);
+        const chatHistoryArr = await this._chatHistoryController.getHistory();
 
-
-
-        // await getMsgsHistory();
-
-        // const fileStr: any = await getMsgsHistory();
-        // const fileTeplateObj = new MsgObj(fileStr);
-        // const fileTemplateArr: IMsgObj[] = [
-        //   fileTeplateObj
-        // ];
-        // // const fileObj =
-        // try {
-        //   fileObj = JSON.parse(fileStr);
-        // } catch(err) {
-        //   fileObj = fileTemplateArr;
-        //   console.log('History cleared due to error!');
-        // }
-        // const initialResponse = {
-        //   file: fileObj,
-        //   history: true,
-        // };
-        // const initialResponseJson = JSON.stringify(initialResponse);
-        // connection.send(initialResponseJson);
-        connection.send('console greetings!');
+        const initialResponse = {
+          file: chatHistoryArr,
+          history: true,
+        };
+        const initialResponseJson = JSON.stringify(initialResponse);
+        connection.send(initialResponseJson);
       };
       await greetNewClient();
 
@@ -76,12 +58,13 @@ export class Socket implements ISocket {
             date: fromClientMsgData.date,
             author: fromClientMsgData.nickName,
             history: false,
-          }
+          };
+
+          await this._chatHistoryController.saveMessage(fromClientMsgObj);
 
           console.log('message saved!');
 
           const fromClientMsgJson = JSON.stringify(fromClientMsgObj);
-          // await addMsgToHistory(fromClientMsgObj);
           const dataToSend = fromClientMsgJson;
           this._clients.forEach((client) => {
             client.connection.send(dataToSend);

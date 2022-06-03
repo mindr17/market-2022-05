@@ -43,7 +43,6 @@ export default function Chat(): string {
   });
 
   const sendMessage = (nickName, msg): void => {
-    console.log('msg: ', msg);
     try {
       const sendingDate = new Date();
       const sendMessageObj = {
@@ -52,9 +51,7 @@ export default function Chat(): string {
         date: sendingDate,
       };
       const sendMessageJson = JSON.stringify(sendMessageObj);
-      console.log('sendMessageJson: ', sendMessageJson);
       const testObj = JSON.parse(sendMessageJson);
-      console.log('testObj: ', testObj);
       socketRef.current.sendMessage(sendMessageJson);
     } catch (err) {
       console.error(err);
