@@ -17,40 +17,41 @@ const checkFileExists = async (filePath: string): Promise<boolean> => {
 }
 
 export const getMsgsHistory = async () => {
-  try {
-    console.log('getMsgsHistory called');
-    const db = dbConnection.db;
-    const collection = db.collection('documents');
-    // const somMsgObj = new MsgObj(fileStr);
-    const query: object = {};
-    const dbResponse = collection.find(query);
-    console.log('dbResponse: ', dbResponse);
-
-    // await collection.insertOne({some: 'sample data'});
-  } catch(err) {
-
-  }
   // try {
-    // const collection = db.collection('documents');
-    // await collection.insertOne({some: 'sample data'});
+  //   console.log('getMsgsHistory called');
   //   const db = dbConnection.db;
-  //   const msgsFileExists: boolean = await checkFileExists(msgsFilePath);
-  //   if (!msgsFileExists) {
-  //     return (
-  //       new Promise(() => {
-  //         resolve('');
-  //       })
-  //       )
-  //     }
-  //     // console.log('db: ', db);
-  //     const fileStr: string = await fsPromises.readFile(msgsFilePath, "utf8");
-  //   const msgHistoryObj = {
-  //     fileStr,
-  //   }
-  //   return fileStr
+  //   const collection = db.collection('documents');
+  //   // const somMsgObj = new MsgObj(fileStr);
+  //   const query: object = {};
+  //   const dbResponse = collection.find(query);
+  //   console.log('dbResponse: ', dbResponse);
+
+  //   // await collection.insertOne({some: 'sample data'});
   // } catch(err) {
-  //   console.error('Can\'t access file with messages!');
+
   // }
+
+  try {
+    const collection = db.collection('documents');
+    await collection.insertOne({some: 'sample data'});
+    const db = dbConnection.db;
+    const msgsFileExists: boolean = await checkFileExists(msgsFilePath);
+    if (!msgsFileExists) {
+      return (
+        new Promise(() => {
+          resolve('');
+        })
+        )
+      }
+      // console.log('db: ', db);
+      const fileStr: string = await fsPromises.readFile(msgsFilePath, "utf8");
+    const msgHistoryObj = {
+      fileStr,
+    }
+    return fileStr
+  } catch(err) {
+    console.error('Can\'t access file with messages!');
+  }
 }
 
 export const addMsgToHistory = async (msg: object) => {

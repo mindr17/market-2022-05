@@ -1,6 +1,7 @@
-import { IMsgObj, ISocket } from "./types";
-import { addMsgToHistory, getMsgsHistory } from './chat/chatHistory';
-import { MsgObj } from "./MsgObj";
+import { IMsgObj, ISocket } from "../types";
+// import { addMsgToHistory, getMsgsHistory } from './chat/chatHistory';
+import { ChatHistory } from '../chat/chatHistory';
+import { MsgObj } from '../MsgObj';
 
 const WebSocketServer = require('websocket').server;
 
@@ -20,7 +21,7 @@ export class Socket implements ISocket {
       return true;
     }
     
-    wsServer.on('request', async (request) => {
+    wsServer.on('request', async (request: { origin: string; reject: () => void; accept: (arg0: string, arg1: any) => any; }) => {
       console.log((new Date()) + ' Connection accepted.');
       if (!originIsAllowed(request.origin)) {
         request.reject();
@@ -34,10 +35,16 @@ export class Socket implements ISocket {
           connection: connection,
           id: 1,
         });
-        console.log((new Date()) + ' Connection accepted.');
+        console.log('Greeting new client!');
         
-        await getMsgsHistory();
-        
+        const chatHistory = new ChatHistory();
+        const chatHistoryArr = await chatHistory.getHistory();
+        console.log('chatHistoryArr: ', chatHistoryArr);
+
+
+
+        // await getMsgsHistory();
+
         // const fileStr: any = await getMsgsHistory();
         // const fileTeplateObj = new MsgObj(fileStr);
         // const fileTemplateArr: IMsgObj[] = [
@@ -70,8 +77,11 @@ export class Socket implements ISocket {
             author: fromClientMsgData.nickName,
             history: false,
           }
+
+          console.log('message saved!');
+
           const fromClientMsgJson = JSON.stringify(fromClientMsgObj);
-          await addMsgToHistory(fromClientMsgObj);
+          // await addMsgToHistory(fromClientMsgObj);
           const dataToSend = fromClientMsgJson;
           this._clients.forEach((client) => {
             client.connection.send(dataToSend);
