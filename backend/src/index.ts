@@ -7,6 +7,6 @@ import { dbConnection } from './DbConnection';
 dbConnection.init().then((): void => {
   const serverObj: IServer = new Server();
   const server = serverObj.server;
-  console.log(123);
+  console.log('index.ts 1');
   const socket: ISocket = new Socket(server);
 })

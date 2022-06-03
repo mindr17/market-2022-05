@@ -1,9 +1,9 @@
 import { IMsgObj } from "./types";
 
 export class MsgObj implements IMsgObj {
+  author: string;
   message: string;
   date: Date;
-  author: string;
 
   constructor(fileStr: any) {
     if (typeof fileStr.message !== 'string') {
@@ -18,6 +18,7 @@ export class MsgObj implements IMsgObj {
     this.date = date;
   }
 
+  // static fromString(str) {
   static fromString(str) {
     try {
       return new MsgObj(JSON.parse(str));
@@ -28,7 +29,7 @@ export class MsgObj implements IMsgObj {
             date: Date.now(),
             author: 'Author',
           }      
-        )
+        );
     }
   }
 }

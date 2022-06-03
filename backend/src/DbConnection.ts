@@ -25,7 +25,7 @@ class DbConnection implements IDbConnection {
       throw new Error(err);
     } finally {
       console.log('connected!');
-      this._client.close();
+      // this._client.close();
     }
   }
 

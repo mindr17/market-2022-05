@@ -35,8 +35,11 @@ export class Socket implements ISocket {
           id: 1,
         });
         console.log((new Date()) + ' Connection accepted.');
-        const fileStr: any = await getMsgsHistory();
-        const fileTeplateObj = new MsgObj(fileStr);
+        
+        await getMsgsHistory();
+        
+        // const fileStr: any = await getMsgsHistory();
+        // const fileTeplateObj = new MsgObj(fileStr);
         // const fileTemplateArr: IMsgObj[] = [
         //   fileTeplateObj
         // ];
@@ -53,6 +56,7 @@ export class Socket implements ISocket {
         // };
         // const initialResponseJson = JSON.stringify(initialResponse);
         // connection.send(initialResponseJson);
+        connection.send('console greetings!');
       };
       await greetNewClient();
 
